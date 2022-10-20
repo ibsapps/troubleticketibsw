@@ -26,6 +26,7 @@ class IbsUserPermission extends model
     'void',
     'cancel_void',
     'print',
+    'import',
     'export',
     'approve_1',
     'cancel_approve_1',
@@ -52,7 +53,7 @@ class IbsUserPermission extends model
     return $this->belongsTo(IbsMenu::class, 'ibs_menu_id');
   }
 
-  public function accessMasterMenu($id)
+  public static function accessMasterMenu($id)
   {
 
     // $query = self::with(['ibs_menu' => function ($sql) {
@@ -75,7 +76,7 @@ class IbsUserPermission extends model
   }
 
 
-  public function accessSubMenu($id)
+  public static function accessSubMenu($id)
   {
     $query = self::join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")->where(
       'user_id',
@@ -92,7 +93,7 @@ class IbsUserPermission extends model
     return $query->get();
   }
 
-  public function accessParentSubMenu($id)
+  public static function accessParentSubMenu($id)
   {
     $query = self::join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")->where(
       'user_id',
@@ -109,7 +110,7 @@ class IbsUserPermission extends model
     return $query->get();
   }
 
-  public function getData($menu_id, $user_id)
+  public static function getData($menu_id, $user_id)
   {
     if ($menu_id != null && $user_id != null) {
       $query = self::where('ibs_menu_id', '=', $menu_id)->where('user_id', '=', $user_id)->first();
@@ -126,12 +127,25 @@ class IbsUserPermission extends model
     return $query;
   }
 
-  public function check_access($tbl)
+  public static function check_access($tbl)
   {
     // $user = User::where('id', auth()->user()->id)->first();
     // print_r($user->id);
     $query = self::join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")
       ->where('user_id', auth()->user()->id)->where('ibs_menus.table', $tbl)->first();
+    // $query = self::with(array('ibs_menu' => function ($sql) use ($tbl) {
+    //   $sql->where('table', $tbl);
+    // }))->where('user_id', $id)->first();
+
+    return $query;
+  }
+
+  public static function check_read($tbl)
+  {
+    // $user = User::where('id', auth()->user()->id)->first();
+    // print_r($user->id);
+    $query = self::join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")
+      ->where('user_id', auth()->user()->id)->where('ibs_menus.table', $tbl)->where('read', 1)->first();
     // $query = self::with(array('ibs_menu' => function ($sql) use ($tbl) {
     //   $sql->where('table', $tbl);
     // }))->where('user_id', $id)->first();

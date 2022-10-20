@@ -27,7 +27,9 @@
           </div>
         </div>
       </div>
-      <!-- <hr> -->
+    </div>
+    <!-- <hr> -->
+    <div class="table-responsive">
       <div class="row">
         <div class="col-lg-12">
           <table id="dtable" class="table table-bordered table-striped">

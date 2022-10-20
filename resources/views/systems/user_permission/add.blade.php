@@ -17,7 +17,7 @@
             <select name="user_id" id="user_id" class="form-control" required>
               <option value="">- Select -</option>
               @foreach ($record as $key => $value)
-              <option value="{{ $value->id }}">{{ $value->username }}</option>
+              <option value="{{ $value->id }}">{{ $value->username }} - {{ $value->fullname }}</option>
               @endforeach
             </select>
           </div>
@@ -51,77 +51,81 @@
                     <th>Cancel Approve 2</th>
                     <th>Approve 3</th>
                     <th>Cancel Approve 3</th>
+                    <th>Confidential</th>
                   </tr>
                 </thead>
                 <tbody>
                   @foreach($master_menu as $mm)
-                  @if ($mm->prefix == $value->prefix)
-                  <tr>
-                    <td>
-                      <input type="hidden" name="ibs_menu_id[]" id="ibs_menu_id[]" value="{{ $mm->id }}">
-                      {{ $mm->name }}
-                    </td>
-                    <td><input type="checkbox" name="read[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="create[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="modify[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="void[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_void[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="print[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="export[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_1[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_1[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_2[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_2[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_3[{{ $mm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_3[{{ $mm->id }}]" value="1"></td>
-                  </tr>
-                  @foreach ($sub_menu as $sm)
-                  @if ($sm->master_menu == $mm->id && $sm->prefix == $value->prefix)
-                  <tr>
-                    <td>
-                      <input type="hidden" name="ibs_menu_id[]" id="ibs_menu_id[]" value="{{ $sm->id }}">
-                      ==> {{ $sm->name }}
-                    </td>
-                    <td><input type="checkbox" name="read[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="create[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="modify[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="void[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_void[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="print[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="export[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_1[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_1[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_2[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_2[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_3[{{ $sm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_3[{{ $sm->id }}]" value="1"></td>
-                  </tr>
-                  @foreach ($parent_sub_menu as $pm)
-                  @if ($pm->main_sub_menu == $sm->id_ibs_menu && $pm->prefix == $value->prefix) : ?>
-                  <tr>
-                    <td>
-                      <input type="hidden" name="ibs_menu_id[]" id="ibs_menu_id[]" value="{{ $pm->id }}">
-                      =====> {{ $pm->name }}
-                    </td>
-                    <td><input type="checkbox" name="read[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="create[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="modify[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="void[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_void[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="print[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="export[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_1[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_1[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_2[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_2[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="approve_3[{{ $pm->id }}]" value="1"></td>
-                    <td><input type="checkbox" name="cancel_approve_3[{{ $pm->id }}]" value="1"></td>
-                  </tr>
-                  @endif
-                  @endforeach
-                  @endif
-                  @endforeach
-                  @endif
+                    @if ($mm->prefix == $value->prefix)
+                      <tr>
+                        <td>
+                          <input type="hidden" name="ibs_menu_id[]" id="ibs_menu_id[]" value="{{ $mm->id }}">
+                          {{ $mm->name }}
+                        </td>
+                        <td><input type="checkbox" name="read[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="create[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="modify[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="void[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="cancel_void[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="print[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="export[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="approve_1[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="cancel_approve_1[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="approve_2[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="cancel_approve_2[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="approve_3[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="cancel_approve_3[{{ $mm->id }}]" value="1"></td>
+                        <td><input type="checkbox" name="confidential[{{ $mm->id }}]" value="1"></td>
+                      </tr>
+                      @foreach ($sub_menu as $sm)
+                        @if ($sm->master_menu == $mm->id && $sm->prefix == $value->prefix)
+                          <tr>
+                            <td>
+                              <input type="hidden" name="ibs_menu_id[]" id="ibs_menu_id[]" value="{{ $sm->id }}">
+                              ==> {{ $sm->name }}
+                            </td>
+                            <td><input type="checkbox" name="read[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="create[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="modify[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="void[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="cancel_void[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="print[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="export[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="approve_1[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="cancel_approve_1[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="approve_2[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="cancel_approve_2[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="approve_3[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="cancel_approve_3[{{ $sm->id }}]" value="1"></td>
+                            <td><input type="checkbox" name="confidential[{{ $sm->id }}]" value="1"></td>
+                          </tr>
+                          @foreach ($parent_sub_menu as $pm)
+                            @if ($pm->main_sub_menu == $sm->id && $pm->prefix == $value->prefix)
+                              <tr>
+                                <td>
+                                  <input type="hidden" name="ibs_menu_id[]" id="ibs_menu_id[]" value="{{ $pm->id }}">
+                                  =====> {{ $pm->name }}
+                                </td>
+                                <td><input type="checkbox" name="read[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="create[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="modify[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="void[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="cancel_void[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="print[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="export[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="approve_1[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="cancel_approve_1[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="approve_2[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="cancel_approve_2[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="approve_3[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="cancel_approve_3[{{ $pm->id }}]" value="1"></td>
+                                <td><input type="checkbox" name="confidential[{{ $pm->id }}]" value="1"></td>
+                              </tr>
+                            @endif
+                          @endforeach
+                        @endif
+                      @endforeach
+                    @endif
                   @endforeach
                 </tbody>
               </table>
@@ -130,7 +134,7 @@
           @endforeach
         </div>
         <hr>
-        <button type=" submit" class="save btn btn-primary">Save</button>
+        <button type=" submit" class="btn btn-primary">Save</button>
         <a href="/sys/user_permission" class="back btn btn-secondary">Back</a>
       </form>
     </div>

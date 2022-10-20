@@ -39,7 +39,7 @@
           </div>
         </div>
         <hr>
-        <button type="submit" class="save btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
         <a href="/hrd/division" class="back btn btn-secondary">Back</a>
       </form>
     </div>

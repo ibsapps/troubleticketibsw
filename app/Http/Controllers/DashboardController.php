@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\IbsUserPermission;
 use App\Models\IbsTroubleTicket;
+use App\Models\IbsTroubleTicketCategory;
+use App\Models\IbsInformation;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,60 +18,38 @@ class DashboardController extends Controller
     $this->middleware('auth');
     $this->permission = new IbsUserPermission();
     $this->trouble_ticket = new IbsTroubleTicket();
+    $this->trouble_ticket_category = new IbsTroubleTicketCategory();
+    $this->information = new IbsInformation();
   }
 
   public function index(Request $request)
   {
-    list($open_tickets, $progress_tickets, $close_tickets, $reject_tickets) = $this->cekTicket();
+    // list($open_tickets, $progress_tickets, $close_tickets, $reject_tickets) = $this->cekTicket();
+    $status = ['open','on progress'];
+    if (auth()->user()->ibs_employee->ibs_position_id == 2) {
+      $tickets = $this->trouble_ticket::getData($status, 'dashboard');
+    } elseif (auth()->user()->ibs_employee->ibs_division_id == 2) {
+      $tickets = $this->trouble_ticket::getTicket('list', 3, null);
+    } elseif (auth()->user()->ibs_employee->ibs_division_id == 3) {
+      $tickets = $this->trouble_ticket::getTicket('list', 2, null);
+    } elseif (auth()->user()->ibs_employee->ibs_division_id == 4) {
+      $tickets = $this->trouble_ticket::getTicket('list', 1, null);
+    } else {
+      $tickets = $this->trouble_ticket::all();
+    } 
+    
+    $information = $this->information::getData('dashboard', null, null);
+    $data = [
+      'title' => 'Dashboard',
+      'informations' => $information,
+      'trouble_ticket_categories' => $this->trouble_ticket_category::all(),
+      'kind_tickets' => ['open','progress','close'],
+      'list_tickets' => $tickets
+    ];
     if ($request->ajax()) {
-      $permission = $this->permission->check_access('/ibs_trouble_ticket');
-      if ($request->get('kind') == 'menu') {
-        $data = [
-          'title' => 'Dashboard',
-          'open_tickets' => $open_tickets,
-          'progress_tickets' => $progress_tickets,
-          'close_tickets' => $close_tickets,
-          'reject_tickets' => $reject_tickets,
-          'permission' => $permission
-        ];
-        $result = view('dashboards.index_ajax', $data)->render();
-      } else {
-        $status = $request->get('kind');
-        if (auth()->user()->ibs_employee->ibs_department_id == 2) {
-          if (auth()->user()->ibs_employee->ibs_position_id == 4) {
-            $id = auth()->user()->id;
-          } else {
-            $id = 'all';
-          }
-        } else {
-          $id = null;
-        }
-        $data = [
-          'title' => 'List Trouble Ticket',
-          'records' => $this->trouble_ticket->getData($status, $id),
-          'permission' => $permission
-        ];
-        $result = view('it.trouble_ticket.index_ajax', $data)->render();
-      }
+      $result = view('dashboards.index_ajax', $data)->render();
       return response()->json($result);
     } else {
-      if (auth()->user()->ibs_employee->ibs_department_id == 2 || auth()->user()->ibs_employee_id == 0) {
-        $data = [
-          'title' => 'IBS',
-          'open_tickets' => $open_tickets,
-          'progress_tickets' => $progress_tickets,
-          'close_tickets' => $close_tickets,
-          'reject_tickets' => $reject_tickets,
-        ];
-      } else {
-        $data = [
-          'title' => 'IBS',
-          'open_tickets' => $open_tickets,
-          'progress_tickets' => $progress_tickets,
-          'close_tickets' => $close_tickets,
-          'reject_tickets' => $reject_tickets,
-        ];
-      }
       return view('dashboards.index')->with($data);
     }
   }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use ESolution\DBEncryption\Traits\EncryptedAttribute;
 
 class IbsArea extends Model
 {
-  use HasFactory;
+  use HasFactory, EncryptedAttribute;
 
   protected $guarded = ['id'];
 
@@ -17,6 +18,10 @@ class IbsArea extends Model
     'status',
     'created_by',
     'updated_by'
+  ];
+
+  protected $encryptable = [
+    'name'
   ];
 
   public function ibs_employees()

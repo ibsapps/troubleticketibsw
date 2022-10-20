@@ -16,7 +16,7 @@ class IbsMenu extends Model
     return $this->hasMany(IbsUserPermission::class, 'id');
   }
 
-  public function getPrefix()
+  public static  function getPrefix()
   {
     $query = self::where(
       'status',
@@ -27,7 +27,7 @@ class IbsMenu extends Model
     return $query;
   }
 
-  public function master_menu()
+  public static  function master_menu()
   {
     $query = self::where(
       'status',
@@ -40,7 +40,7 @@ class IbsMenu extends Model
   }
 
 
-  public function sub_menu()
+  public static function sub_menu()
   {
     $query = self::where(
       'status',
@@ -53,7 +53,7 @@ class IbsMenu extends Model
     return $query->get();
   }
 
-  public function parent_sub_menu()
+  public static function parent_sub_menu()
   {
     $query = self::where(
       'status',

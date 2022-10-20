@@ -16,34 +16,36 @@
       </div>
     </div>
     <!-- <hr> -->
-    <div class="row">
-      <div class="col-lg-12">
-        <table id="dtable" class="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>No.</th>
-              @if ($permission->modify == 1)
-              <th>Action</th>
-              @endif
-              <th>Username</th>
-              <th>Email</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($records as $record)
-            <tr>
-              <td>{{ $loop->iteration }}</td>
-              @if ($permission->modify == 1)
-              <td><a href="/sys/user_permission/{{ $record->id}}/edit" class="btn btn-info">Edit</a></td>
-              @endif
-              <td>{{ $record->username }}</td>
-              <td>{{ $record->email }}</td>
-              <td>{{ $record->status == 1 ? 'Active' : 'Suspend' }}</td>
-            </tr>
-            @endforeach
-          </tbody>
-        </table>
+    <div class="table-responsive">
+      <div class="row">
+        <div class="col-lg-12">
+          <table id="dtable" class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>No.</th>
+                @if ($permission->modify == 1)
+                <th>Action</th>
+                @endif
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($records as $record)
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+                @if ($permission->modify == 1)
+                <td><a href="/sys/user_permission/{{ $record->id}}/edit" class="btn btn-info">Edit</a></td>
+                @endif
+                <td>{{ $record->username }}</td>
+                <td>{{ $record->email }}</td>
+                <td>{{ $record->status == 1 ? 'Active' : 'Suspend' }}</td>
+              </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

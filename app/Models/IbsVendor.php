@@ -34,7 +34,7 @@ class IbsVendor extends Model
   }
   //
 
-  public function getData($id)
+  public static function getData($id)
   {
     if ($id != null) {
       $query = self::find($id);

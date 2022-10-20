@@ -9,21 +9,26 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use ESolution\DBEncryption\Traits\EncryptedAttribute;
+
 
 class IbsEmployee extends Model
 {
-  use HasFactory;
+  use HasFactory, EncryptedAttribute;
 
   protected $fillable = [
     'ibs_position_id',
     'ibs_department_id',
     'ibs_division_id',
-    'ibs_area_id',
+    'area',
+    'sub_area',
+    'ptkp',
     'nik',
     'name',
+    'company_email',
     'email',
     'group',
-    'contract_statu',
+    'contract_status',
     'entry_date',
     'gender',
     'born_date',
@@ -33,16 +38,25 @@ class IbsEmployee extends Model
     'bpjs_tk',
     'bpjs_kes',
     'origin_address',
+    'temporary_address',
     'phone_number',
-    'phone_number_2',
+    'smartfren_phone_number',
     'religion',
+    'sinarmas_bank_account',
+    'mandiri_bank_account',
     'education_location',
     'education_degree',
     'education_major',
     'cost_center',
     'cost_center_description',
     'directorate',
+    'marital_status',
+    'join_date',
+    'resign_date',
+    'contract_begin',
+    'contract_end',
     'status',
+    'reason_of_status',
     'created_at',
     'updated_at',
     'created_by',
@@ -52,6 +66,12 @@ class IbsEmployee extends Model
 
   protected $with = ['ibs_division', 'ibs_department', 'ibs_position'];
 
+  protected $encryptable = [
+    'email','company_email','sinarmas_bank_account','mandiri_bank_account','origin_address','temporary_address','phone_number','smartfren_phone_number','ktp_number',
+    'npwp','bpjs_tk','bpjs_kes'
+  ];
+
+  protected $dates = ['join_date', 'entry_date', 'born_date', 'resign_date', 'contract_begin', 'contract_end', 'created_at', 'updated_at'];
 
   //relation table function
   public function ibs_department()
@@ -76,7 +96,7 @@ class IbsEmployee extends Model
     $this->hasMany(IbsUser::class);
   }
 
-  public function getData($id, $tbl)
+  public static function getData($id, $tbl)
   {
     if ($id != null && $tbl == null) {
       $query = self::find($id);
@@ -86,6 +106,12 @@ class IbsEmployee extends Model
       // $query = self::with(['ibs_division', 'ibs_department', 'ibs_position'])->where('ibs_employees.status', 1)->get();
       $query = self::where('ibs_employees.status', 1)->get();
     }
+    return $query;
+  }
+
+  public static function findData($params, $kind)
+  {
+    $query = self::where($kind, $params)->first();
     return $query;
   }
 }

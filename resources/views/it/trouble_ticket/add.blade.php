@@ -5,6 +5,8 @@
   <div class="card-header">
     <h4>{{ $title }}</h4>
   </div>
+
+
   <div class="form-horizontal">
     <div class="card-body">
       {{-- menampilkan error validasi --}}
@@ -50,7 +52,7 @@
             <select name="ibs_trouble_ticket_category_id" id="ibs_trouble_ticket_category_id" class="form-control">
               <option value="">- Selected -</option>
               <option value="1">Network</option>
-              <option value="2">Support</option>
+              <option value="2">Support / Hardware</option>
               <option value="3">Application / System</option>
             </select>
           </div>
@@ -70,34 +72,14 @@
             <input type="text" id="request" name="request" class="form-control" value="{{ old('request') }}">
           </div>
         </div>
-        <hr>
-        <div class="col-lg-6">
-          <button type="button" id="add_item" name="add_item" tbl="trouble_ticket" class="btn btn-primary">Add</button>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-lg-12" style="overflow: auto; height: 250px;">
-            <table class="table table-bordered" id="tbl_item">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Description</th>
-                  <th>File Upload</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr id="trid1">
-                  <td class="counter">
-                    <input type="hidden" id="created_item_by[]" name="created_item_by[]" value="{{ auth()->user()->id }}">
-                    1
-                  </td>
-                  <td><textarea name="description[]" id="description[]" cols="30" class="form-control"></textarea></td>
-                  <td><input type="file" name="file[]" id="file[]" class="btn btn-default btn-block btn-sm" accept="image/*"></td>
-                  <td><button onclick="$(this).parent().parent().remove();" class="btn btn-default btn-block btn-sm"><img src="{!! asset('assets/images/delete.png') !!}" style="width:20px;height:20px;"></button></td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="form-group row">
+          <label class="col-lg-1 col-form-label">Description</label>
+          <div class="col-lg-5">
+            <textarea id="description" name="description" class="form-control" rows="5" value="{{ old('description') }}" required="true"></textarea>
+          </div>
+          <label class="col-lg-1 col-form-label">Attachment</label>
+          <div class="col-lg-2">
+            <input type="file" id="file" name="file" class="form-control" value="{{ old('file') }}" accept="image/*">
           </div>
         </div>
         <hr>

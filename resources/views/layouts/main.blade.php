@@ -38,7 +38,7 @@
             <img src="{!! asset('assets/dist/img/user2-160x160.jpg') !!}" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
-            <a href="#" class="d-block">{{ auth()->user()->fullname }}</a>
+            <a href="/sys/user_account/{{ auth()->user()->id }}/edit" class="d-block">{{ auth()->user()->fullname }}</a>
           </div>
         </div>
 
@@ -115,6 +115,14 @@
 
   <!-- Select2 -->
   <script src="{!! asset('assets/plugins/select2/js/select2.full.min.js') !!}"></script>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script> -->
+  <!-- tiny-slider.js -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script> -->
+  
+  <!-- <script src="{!! asset('assets/dist/js/owl.carousel.js') !!}"></script> -->
+  <!-- owl carousel -->
+  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.js"></script> -->
 
   @include('layouts.jsscript')
   <!-- AdminLTE for demo purposes -->

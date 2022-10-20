@@ -21,7 +21,11 @@
           </div>
           <label class="col-lg-1 col-form-label">Date</label>
           <div class="col-lg-2">
-            <input type="date" id="ticket_date" name="ticket_date" class="form-control" value="{{ date('Y-m-d') }}" disabled>
+            <input type="date" id="ticket_date" name="ticket_date" class="form-control" value="{{ $record->request_date == null ? '' : $record->request_date->format('Y-m-d') }}" disabled>
+          </div>
+          <label class="col-lg-1 col-form-label">Due Date</label>
+          <div class="col-lg-2">
+            <input type="date" id="due_date" name="due_date" class="form-control" value="{{ $record->due_date == null ? '' : $record->due_date->format('Y-m-d') }}" disabled>
           </div>
         </div>
         <div class="form-group row">
@@ -37,44 +41,42 @@
           <div class="col-lg-2">
             <input type="text" name="status" id="status" class="form-control" value="{{ $record->status }}" disabled>
           </div>
+          @if ($record->actioned_by_id != null)
+            <label class="col-lg-1 col-form-label">PIC</label>
+            <div class="col-lg-2">
+              <input type="pic" name="pic" class="form-control" value="{{ $record->actioned_by->fullname }}" disabled>
+            </div>
+          @endif
         </div>
         <div class="form-group row">
-          <label class="col-lg-1 col-form-label">Request</label>
+          <label class="col-lg-1 col-form-label">Trouble</label>
           <div class="col-lg-5">
             <input type="text" id="request" name="request" class="form-control" value="{{ $record->request }}" disabled>
           </div>
+          @if (auth()->user()->ibs_employee->ibs_department_id == 2)
+            @if ($record->trouble_repair != null)
+              <label class="col-lg-1 col-form-label">Repaired</label>
+              <div class="col-lg-2">
+                <input type="text" name="trouble_repair" id="trouble_repair" class="form-control" value="{{ $record->trouble_repair }}" disabled>
+              </div>
+              @if ($record->trouble_repair == 'external')
+                <div class="col-lg-3">
+                  <input type="text" name="vendor_name" id="vendor_name" class="form-control" value="{{ $record->ibs_vendor->name }}" disabled>
+                </div>
+              @endif
+            @endif
+          @endif
         </div>
-        <hr>
-        <div class="row">
-          <div class="col-lg-12" style="overflow: auto; height: 250px;">
-            <table class="table table-bordered" id="tbl_item">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Description</th>
-                  <th>File Upload</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($record_items as $item)
-                <tr id="trid{{ $loop->iteration }}">
-                  <td class="counter">
-                    {{ $loop->iteration }}
-                  </td>
-                  <td><textarea name="description[]" id="description[]" cols="30" class="form-control" disabled>{{ $item->description }}</textarea></td>
-                  <td>
-                    @if (!empty($item->filename_original))
-                    <a href="{!! asset($item->file_path) !!}" target="_blank"><img src="{!! asset($item->file_path) !!}" alt=" {{ $item->filename_original }}" style="width:100px;height:100px;"></a>
-                    @endif
-                  </td>
-                  <td>
-                    <input type="status_item[]" id="status_item[]" class="form-control" disabled value="{{ $item->status == 1 ? 'Active' : 'Suspend' }}">
-                  </td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
+        <div class="form-group row">
+          <label class="col-lg-1 col-form-label">Description</label>
+          <div class="col-lg-5">
+            <textarea id="description" name="description" class="form-control" disabled="true" rows="5">{{ $record->description }}</textarea>
+          </div>
+          <label class="col-lg-1 col-form-label">Attachment</label>
+          <div class="col-lg-2">
+            @if (!empty($record->filename_original))
+              <a href="{!! asset($record->file_path) !!}" target="_blank"><img src="{!! asset($record->file_path) !!}" alt=" {{ $record->filename_original }}" style="width:100px;height:100px;"></a>
+            @endif
           </div>
         </div>
         <hr>

@@ -31,7 +31,19 @@
           </div>
           <label class="col-lg-1 col-form-label">Date</label>
           <div class="col-lg-2">
-            <input type="date" id="ticket_date" name="ticket_date" class="form-control" value="{{ date('Y-m-d') }}" readonly>
+            <input type="date" id="ticket_date" name="ticket_date" class="form-control" value="{{ $record->request_date == null ? '' : $record->request_date->format('Y-m-d') }}" readonly>
+          </div>
+          <label class="col-lg-1 col-form-label">Due Date</label>
+          <div class="col-lg-2">
+            @if ($record->due_date == null)
+              @if (auth()->user()->ibs_employee->ibs_department_id == 2)
+                <input type="date" id="due_date" name="due_date" class="form-control" required="true">
+              @else
+                <input type="date" id="due_date" name="due_date" class="form-control" value="{{ $record->due_date == null ? '' : $record->due_date->format('Y-m-d') }}" readonly>
+              @endif
+            @else
+              <input type="date" id="due_date" name="due_date" class="form-control" value="{{ $record->due_date == null ? '' : $record->due_date->format('Y-m-d') }}" readonly>
+            @endif
           </div>
         </div>
         <div class="form-group row">
@@ -55,85 +67,84 @@
           <label class="col-lg-1 col-form-label">Status</label>
           <div class="col-lg-2">
             @if (auth()->user()->ibs_employee->ibs_department_id == 2)
-            <select name="status" id="status" class="form-control">
+            <select name="status" id="status" class="form-control" required>
               <option value="open" {{ $record->status == 'open' ? 'selected' : '' }}>Open</option>
               <option value="on progress" {{ $record->status == 'on progress' ? 'selected' : '' }}>On Progress</option>
               <option value="close" {{ $record->status == 'close' ? 'selected' : '' }}>Close</option>
               <option value="reject" {{ $record->status == 'reject' ? 'selected' : '' }}>Reject</option>
             </select>
             @else
-            <input type="text" name="status" id="status" class="form-control" value="{{  $record->status }}" readonly>
+              <input type="text" name="status" id="status" class="form-control" value="{{  $record->status }}" readonly>
             @endif
           </div>
+          @if ($record->actioned_by_id == null)
+            @if (auth()->user()->ibs_employee->ibs_department_id == 2)
+              @if (auth()->user()->ibs_employee->ibs_position_id == 2 || auth()->user()->ibs_employee->ibs_position_id == 3 )
+                <label class="col-lg-1 col-form-label">PIC</label>
+                <div class="col-lg-2">
+                  <select name="actioned_by_id" id="actioned_by_id" class="form-control" required="true">
+                    <option value="">- Select -</option>
+                    @foreach ($superiors as $superior)
+                      <option value="{{ $superior->user_id }}" {{ $record->actioned_by_id == $superior->user_id ? 'selected' : ''}}>{{ $superior->user->fullname }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              @endif
+            @endif
+          @else 
+            <label class="col-lg-1 col-form-label">PIC</label>
+            <div class="col-lg-2">
+              <input type="text" name="pic" id="pic" class="form-control" value="{{ $record->actioned_by->fullname }}" readonly="">
+            </div>
+          @endif
         </div>
         <div class="form-group row">
-          <label class="col-lg-1 col-form-label">Request</label>
+          <label class="col-lg-1 col-form-label">Trouble</label>
           <div class="col-lg-5">
             <input type="text" id="request" name="request" class="form-control" value="{{ $record->request }}" {{ $record->user_id != auth()->user()->id ? 'readonly' : ($record->status == 'open' ? '' : 'readonly') }}>
           </div>
+          @if ($record->actioned_by_id != null)
+            @if ($record->actioned_by_id == auth()->user()->id)
+              <label class="col-lg-1 col-form-label">Repaired</label>
+              <div class="col-lg-2">
+                <select name="trouble_repair" id="trouble_repair" class="form-control" required>
+                  <option>- Select -</option>
+                  <option value="internal" {{ $record->trouble_repair == 'internal' ? 'selected' : '' }}>Internal</option>
+                  <option value="external" {{ $record->trouble_repair == 'external' ? 'selected' : '' }}>External</option>
+                </select>
+              </div>
+              <div class="col-lg-3">
+                  <select name="ibs_vendor_id" id="ibs_vendor_id" class="form-control" style="display: <?= $record->trouble_repair == null || $record->trouble_repair == 'internal' ? 'none' : 'display' ?>;" required>
+                  <option>- Select -</option>
+                  @foreach ($vendors as $vendor)
+                    <option value="{{ $vendor->id }}" {{ $record->ibs_vendor_id == $vendor->id ? 'selected' : ''   }}>{{ $vendor->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            @endif
+          @endif
         </div>
-        <hr>
-        @if ($record->user_id == auth()->user()->id)
-        @if ($record->status == 'open')
-        <div class="col-lg-6">
-          <button type="button" id="add_item" name="add_item" tbl="trouble_ticket" class="btn btn-primary">Add</button>
-        </div>
-        @endif
-        @endif
-        <br>
-        <div class="row">
-          <div class="col-lg-12" style="overflow: auto; height: 250px;">
-            <table class="table table-bordered" id="tbl_item">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Description</th>
-                  <th>File Upload</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($record_items as $item)
-                <tr id="trid{{ $loop->iteration }}">
-                  <td class="counter">
-                    <input type="hidden" id="item_id[]" name="item_id[]" value="{{ $item->id }}">
-                    <input type="hidden" id="created_by[]" name="created_by[]" value="{{ auth()->user()->id }}">
-                    {{ $loop->iteration }}
-                  </td>
-                  @if ($record->status == 'open')
-                  <td><textarea name="description[]" id="description[]" cols="30" class="form-control" {{ $record->user_id != auth()->user()->id ? 'readonly' : '' }}>{{ $item->description }}</textarea></td>
-                  <td>
-                    @if (!empty($item->filename_original))
-                    <a href="{!! asset($item->file_path) !!}" target="_blank"><img src="{!! asset($item->file_path) !!}" alt=" {{ $item->filename_original }}" style="width:100px;height:100px;"></a>
-                    @endif
-                    <input type="file" name="file[]" id="file[]" class="btn btn-default btn-block btn-sm" accept="image/*" {{ $record->user_id != auth()->user()->id ? 'disabled' : '' }}>
-                  </td>
-                  <td>
-                    <select name="status_item[]" id="status_item[]" class="form-control" required {{ $record->user_id != auth()->user()->id ? 'readonly' : '' }}>
-                      <option value="1" {{ $item->status == 1 ? 'selected' : '' }}>Active</option>
-                      <option value="0" {{ $item->status == 0 ? 'selected' : '' }}>Suspend</option>
-                    </select>
-                  </td>
-                  @else
-                  <td><textarea name="description[]" id="description[]" cols="30" class="form-control" readonly>{{ $item->description }}</textarea></td>
-                  <td>
-                    @if (!empty($item->filename_original))
-                    <a href="{!! asset($item->file_path) !!}" target="_blank"><img src="{!! asset($item->file_path) !!}" alt=" {{ $item->filename_original }}" style="width:100px;height:100px;"></a>
-                    @endif
-                  </td>
-                  <td>
-                    <input type="hidden" name="status_item[]" id="status_item[]" class="form-control" value="{{ $item->status }}" readonly>
-                    <input type="text" class="form-control" value="{{ $item->status == 1 ? 'Active' : 'Suspend' }}" readonly>
-                  </td>
-                  @endif
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
+        <div class="form-group row">
+          <label class="col-lg-1 col-form-label">Description</label>
+          <div class="col-lg-5">
+            @if ($record->status == 'open')
+              <textarea id="description" name="description" rows="5" class="form-control" required="true">{{ $record->description }}</textarea>
+            @else
+              <textarea name="description" id="description" rows="5" class="form-control" readonly>{{ $record->description }}</textarea>
+            @endif
+          </div>
+          <label class="col-lg-1 col-form-label">Attachment</label>
+          <div class="col-lg-2">
+            @if (!empty($record->filename_original))
+              <a href="{!! asset($record->file_path) !!}" target="_blank"><img src="{!! asset($record->file_path) !!}" alt=" {{ $record->filename_original }}" style="width:100px;height:100px;"></a>
+            @endif
+            @if ($record->status == 'open')
+              <input type="file" name="file" id="file" class="btn btn-default btn-block btn-sm" accept="image/*" {{ $record->user_id != auth()->user()->id ? 'disabled' : '' }}>
+            @endif
           </div>
         </div>
         <hr>
-        <button type="submit" class="save btn btn-primary" data-toggle="tooltip" title='Save'>Save</button>
+        <button type="submit" class="save btn btn-primary" tbl="trouble_ticket" data-toggle="tooltip" title='Save'>Save</button>
         <a href="/it/trouble_ticket" class="back btn btn-secondary">Back</a>
       </form>
     </div>

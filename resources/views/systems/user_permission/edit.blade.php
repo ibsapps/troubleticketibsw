@@ -41,6 +41,7 @@
                     <th>Void</th>
                     <th>Cancel Void</th>
                     <th>Print</th>
+                    <th>Import</th>
                     <th>Export</th>
                     <th>Approve 1</th>
                     <th>Cancel Approve 1</th>
@@ -48,6 +49,7 @@
                     <th>Cancel Approve 2</th>
                     <th>Approve 3</th>
                     <th>Cancel Approve 3</th>
+                    <th>Confidential</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,6 +73,7 @@
                     <td><input type="checkbox" name="void[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->void == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_void[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_void == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="print[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->print == 1 ? 'checked' : '' }}></td>
+                    <td><input type="checkbox" name="import[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->import == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="export[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->export == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="approve_1[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->approve_1 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_approve_1[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_1 == 1 ? 'checked' : '' }}></td>
@@ -78,6 +81,7 @@
                     <td><input type="checkbox" name="cancel_approve_2[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_2 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="approve_3[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->approve_3 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_approve_3[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_3 == 1 ? 'checked' : '' }}></td>
+                    <td><input type="checkbox" name="confidential[{{ $mm->id }}]" value="1" {{ $cek_id != null && $cek_id->confidential == 1 ? 'checked' : '' }}></td>
                   </tr>
                   @foreach ($sub_menu as $sm)
                   @if ($sm->master_menu == $mm->id && $sm->prefix == $value->prefix)
@@ -99,6 +103,7 @@
                     <td><input type="checkbox" name="void[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->void == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_void[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_void == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="print[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->print == 1 ? 'checked' : '' }}></td>
+                    <td><input type="checkbox" name="import[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->import == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="export[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->export == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="approve_1[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->approve_1 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_approve_1[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_1 == 1 ? 'checked' : '' }}></td>
@@ -106,6 +111,7 @@
                     <td><input type="checkbox" name="cancel_approve_2[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_2 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="approve_3[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->approve_3 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_approve_3[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_3 == 1 ? 'checked' : '' }}></td>
+                    <td><input type="checkbox" name="confidential[{{ $sm->id }}]" value="1" {{ $cek_id != null && $cek_id->confidential == 1 ? 'checked' : '' }}></td>
                   </tr>
                   @foreach ($parent_sub_menu as $pm)
                   @if ($pm->main_sub_menu == $sm->id && $pm->prefix == $value->prefix)
@@ -127,6 +133,7 @@
                     <td><input type="checkbox" name="void[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->void == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_void[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_void == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="print[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->print == 1 ? 'checked' : '' }}></td>
+                    <td><input type="checkbox" name="import[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->import == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="export[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->export == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="approve_1[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->approve_1 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_approve_1[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_1 == 1 ? 'checked' : '' }}></td>
@@ -134,6 +141,7 @@
                     <td><input type="checkbox" name="cancel_approve_2[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_2 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="approve_3[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->approve_3 == 1 ? 'checked' : '' }}></td>
                     <td><input type="checkbox" name="cancel_approve_3[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->cancel_approve_3 == 1 ? 'checked' : '' }}></td>
+                    <td><input type="checkbox" name="confidential[{{ $pm->id }}]" value="1" {{ $cek_id != null && $cek_id->confidential == 1 ? 'checked' : '' }}></td>
                   </tr>
                   @endif
                   @endforeach

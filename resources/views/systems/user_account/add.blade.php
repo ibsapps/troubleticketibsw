@@ -47,13 +47,9 @@
             <label>Email</label>
             <input type="email" name="email" id="email" class="form-control" readonly>
           </div>
-          <div class="form-group col-lg-12">
-            <label>Password</label>
-            <input type="password" name="password" id="password" class="form-control" maxlength="64">
-          </div>
         </div>
         <hr>
-        <button type="submit" class="save btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
         <a href="/sys/user_account" class="back btn btn-secondary">Back</a>
       </form>
     </div>

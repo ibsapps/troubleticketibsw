@@ -25,9 +25,19 @@ class IbsSuperior extends Model
     return $this->belongsTo(User::class, 'user_id');
   }
 
-  public function getData()
+  public function superior_user()
   {
-    $query = self::where('superior_user_id', auth()->user()->id)->where('status', 1)->get();
+    return $this->belongsTo(User::class, 'superior_user_id');
+  }
+
+
+  public static function getData($job = '')
+  {
+    if ($job == 'list') {
+      $query = self::where('status', 1)->get();
+    } else {
+      $query = self::where('superior_user_id', auth()->user()->id)->where('status', 1)->get();
+    }
     return $query;
   }
 }

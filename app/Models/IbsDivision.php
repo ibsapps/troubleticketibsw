@@ -23,14 +23,21 @@ class IbsDivision extends Model
     return $this->hasMany(IbsEmployee::class, 'id');
   }
 
-  public function getData($id)
+  public static function getData($id)
   {
     if ($id != null) {
       $query = self::find($id);
     } else {
-      $query = self::where('status', 1)->get();
+      $query = self::where('status', 1)->orderBy('name')->get();
     }
     // return $this->belongsTo(IbsMenu::class)->where('status', 1);
+    return $query;
+  }
+  
+  public static function findData($params, $kind)
+  {
+    $query = self::where($kind, $params)->first();
+    
     return $query;
   }
 }

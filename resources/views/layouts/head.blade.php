@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>IBS</title>
 <!-- ANIMATE CSS -->
@@ -34,3 +34,10 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="{!! asset('assets/plugins/select2/css/select2.min.css') !!}">
 <link rel="stylesheet" href="{!! asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') !!}">
+
+<!-- tiny=slider -->
+<!-- // For CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css">
+
+<!-- // For JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script>

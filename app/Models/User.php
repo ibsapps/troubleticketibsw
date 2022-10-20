@@ -50,7 +50,6 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
   public $timestamps = false;
-  // protected $table = 'ibs_users'; // add this line with your table name
 
   public function ibs_user_permissions()
   {
@@ -60,6 +59,11 @@ class User extends Authenticatable
   public function ibs_superiors()
   {
     return $this->hasMany(IbsSuperior::class, 'id');
+  }
+
+  public function ibs_informations()
+  {
+    return $this->hasMany(IbsInformation::class, 'id');
   }
 
   public function ibs_employee()
@@ -72,27 +76,33 @@ class User extends Authenticatable
     return $this->hasMany(IbsTroubleTicket::class, 'id');
   }
 
-  public function getData($id)
+  public function getLogin($email)
+  {
+    $query = self::where('email', $email)->first();
+
+    return $query;
+  }
+
+  public static function getData($id, $job)
   {
     if ($id != null) {
       $query = self::find('id ?', [$id]);
+    } elseif ($job == 'list') {
+      $query = self::where('status', '=', [1])->get();
     } else {
-      //$users = self::select('ibs_employee_id')->where('status', '=', 1)->get();
-      // $query = self::where('status', '=', [1])->whereRaw('id not in (select ibs_employee_id from ibs_users where status = 1)')->get();
       $query = self::where('status', '=', [1])->whereRaw('id not in (select user_id from ibs_user_permissions)')->get();
     }
     return $query;
   }
 
-  public function listUser()
+  public static function listUser()
   {
     $query = self::where('status', '=', [1])->whereRaw('id in (select user_id from ibs_user_permissions)')->get();
     return $query;
   }
 
-  public function hasRead($id, $tbl)
+  public static function hasRead($id, $tbl)
   {
-    // check param $role dengan field usertype
     $query = DB::table('ibs_user_permissions')->join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")
       ->where('user_id', $id)->where('ibs_menus.table', $tbl)->where('read', 1)->row();
 
@@ -101,5 +111,13 @@ class User extends Authenticatable
     } else {
       return false;
     }
+  }
+
+  public static function updatedData($id, $tbl, $kind)
+  {
+    if ($id != null && $tbl == null && $kind == null) {
+      $query = self::where('id', $id)->update(['status' => 0]);
+    }
+    return $query;
   }
 }

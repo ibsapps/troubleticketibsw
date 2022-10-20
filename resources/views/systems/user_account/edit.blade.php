@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
-<div class="card">
+<div class="card col-lg-6">
   <div class="card-header">
     <h4>{{ $title }}</h4>
   </div>
   <div class="form-horizontal">
     <div class="card-body">
-      <form method="POST" action="/sys/account/{{ $record->id }}">
+      <form method="POST" action="/sys/user_account/{{ $record->id }}">
         @method('PUT')
         @csrf
         <input type="hidden" id="id" name="id" value="{{ $record->id }}">
@@ -16,7 +16,7 @@
         <div class="card-body">
           <div class="form-group col-lg-12">
             <label>Employee</label>
-            <input type="text" name="employee_name" id="employee_name" value="{{ $record-user->name }}" readonly>
+            <input type="text" name="employee_name" id="employee_name" class="form-control" value="{{ $record->fullname }}" readonly>
           </div>
           <div class="form-group col-lg-12">
             <label>Username</label>

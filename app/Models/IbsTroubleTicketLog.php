@@ -38,7 +38,7 @@ class IbsTroubleTicketLog extends Model
     return $this->hasMany(IbsTroubleTicket::class, 'id');
   }
 
-  public function checkLog($id, $status)
+  public static function checkLog($id, $status)
   {
     $query = self::where('ibs_trouble_ticket_id', $id)->where('status', $status)->first();
     return $query;

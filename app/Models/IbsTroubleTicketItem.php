@@ -39,12 +39,12 @@ class IbsTroubleTicketItem extends Model
   }
   //
 
-  public function getData($id)
+  public static function getData($id)
   {
     $query = self::where('id', $id)->first();
     return $query;
   }
-  public function getItem($id)
+  public static function getItem($id)
   {
     $query = self::where('ibs_trouble_ticket_id', $id)->where('status', 1)->get();
     return $query;

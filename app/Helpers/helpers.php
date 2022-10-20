@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 
 // if (!function_exists('check_access')) {
 // function check_access($tbl, $id)
@@ -37,21 +39,21 @@ use Illuminate\Support\Facades\Session;
 //   return $user;
 // }
 
-function helperCheckAccess($tbl)
-{
-  // $user = Auth::user();
-  // return print_r($user);
-  $query = DB::table('ibs_user_permissions')->join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")
-    ->where('ibs_menus.table', $tbl)->where('user_id', Auth::user('id'))->where('read', 1)->first();
+// function helperCheckAccess($tbl)
+// {
+//   // $user = Auth::user();
+//   // return print_r($user);
+//   $query = DB::table('ibs_user_permissions')->join('ibs_menus', 'ibs_menus.id', "=", "ibs_user_permissions.ibs_menu_id")
+//     ->where('ibs_menus.table', $tbl)->where('user_id', Auth::user('id'))->where('read', 1)->first();
 
-  return $query;
-  // return $user;
-  // if ($query != null) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
-}
+//   return $query;
+//   // return $user;
+//   // if ($query != null) {
+//   //   return true;
+//   // } else {
+//   //   return false;
+//   // }
+// }
 
 function documentNumbering($data, $tbl, $kind)
 {
@@ -106,7 +108,7 @@ function documentNumbering($data, $tbl, $kind)
 function sendMailNotification($data, $tbl, $pic, $kind)
 {
   switch ($tbl) {
-    case 'trouble_ticket_items':
+    case 'trouble_tickets':
       $subj_mail = 'Tiket kamu dengan nomor ' . $data->number . ' ' . $kind;
       $sender = 'troubleticket@ibsmulti.com';
       break;
@@ -128,18 +130,34 @@ function sendMailNotification($data, $tbl, $pic, $kind)
 function deleteFile($data, $tbl, $path, $kind)
 {
   switch ($tbl) {
-    case 'trouble_ticket_item':
+    case 'trouble_ticket':
       if (File::exists(public_path($path . '/' . $data))) {
         File::delete(public_path($path . '/' . $data));
       }
       break;
-
     default:
-      # code...
+      if (File::exists(public_path($path . '/' . $data))) {
+        File::delete(public_path($path . '/' . $data));
+      }
       break;
   }
 }
 
+function decryptValue($value, $tbl, $kind)
+{
+  $result = '';
+  switch ($tbl) {
+    case 'trouble_ticket':
+      $result = Crypt::decryptString($value);
+      break;
+
+    default:
+      $result = Crypt::decryptString($value);
+      break;
+  }
+  $result = 'hehe';
+  return $result;
+}
   // public static function access($tbl, $access)
   // {
   //   $query

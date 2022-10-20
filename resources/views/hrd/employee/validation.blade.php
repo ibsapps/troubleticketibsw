@@ -5,9 +5,6 @@
   </div>
   @endif
   <div class="col-sm-1">
-    <a href="/hrd/employee" class="btn btn-danger">Suspend</a>
-  </div>
-  <div class="col-sm-1">
     <a href="/hrd/employee" class="btn btn-secondary">Back</a>
   </div>
 </div>
